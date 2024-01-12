@@ -34,7 +34,7 @@ app.post('/login', (req, res) => {
     res.cookie(
       '1.0.0-cookie', 
       token, 
-      { maxAge: oneHour, httpOnly: true, secure: true },
+      { maxAge: oneHour, httpOnly: true, secure: true, sameSite: 'none' },
     )
 
   }
