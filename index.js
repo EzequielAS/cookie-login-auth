@@ -29,12 +29,12 @@ app.post('/login', (req, res) => {
 
   if (cookie === undefined) {
     const token = crypto.randomUUID()
-    const oneHour = 1000 * 60 * 60 * 1
+    const oneYear = 1000 * 60 * 60 * 24 * 365
 
     res.cookie(
       '1.0.0-cookie', 
       token, 
-      { maxAge: oneHour, httpOnly: true, secure: true, sameSite: 'none' },
+      { maxAge: oneYear, httpOnly: true, secure: true, sameSite: 'none' },
     )
 
   }
