@@ -22,16 +22,19 @@ app.post('/login', (req, res) => {
   const isValidUser = email === bd.email 
     && password === bd.password
 
-  if (!isValidUser) return res.status(404).send({ statusCode: 404, message: 'User not found'})
+  if (!isValidUser) return res.status(404).send({ 
+    statusCode: 404, 
+    message: 'User not found'
+  })
 
   if (cookie === undefined) {
     const token = crypto.randomUUID()
-    const threeMinutes = 1000 * 60 * 60 * 1 // 1 hour
+    const oneHour = 1000 * 60 * 60 * 1
 
     res.cookie(
       '1.0.0-cookie', 
       token, 
-      { maxAge: threeMinutes, httpOnly: true },
+      { maxAge: oneHour, httpOnly: true, secure: true },
     )
 
   }
@@ -43,7 +46,10 @@ app.get('/server-cookie', (req, res) => {
   const cookie = req.cookies['1.0.0-cookie']
 
   if (cookie === undefined) {
-    return res.status(401).send({ statusCode: 400, message: 'User Unauthorized'})
+    return res.status(401).send({ 
+      statusCode: 400, 
+      message: 'User Unauthorized'
+    })
   }
 
   res.status(200).send({ statusCode: 200, results: [1, 2, 3]})
