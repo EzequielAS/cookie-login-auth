@@ -1,5 +1,4 @@
 const express = require('express')
-const cookieParser = require('cookie-parser')
 const cors = require('cors')
 const crypto = require('crypto');
 
@@ -10,44 +9,35 @@ const bd = {
   password: '123'
 }
 
-app.use(cors({ credentials: true, origin: 'https://clean-arch-next.vercel.app' }))
+// { origin: 'https://clean-arch-next.vercel.app' }
+app.use(cors())
 app.use(express.json())
-app.use(cookieParser())
 
 app.post('/login', (req, res) => {
-  const cookie = req.cookies['1.0.0-cookie']
   const email = req.body?.email
   const password = req.body?.password
 
   const isValidUser = email === bd.email 
     && password === bd.password
 
-  if (!isValidUser) return res.status(404).send({ 
-    statusCode: 404, 
-    message: 'User not found'
-  })
-
-  if (cookie === undefined) {
-    const token = crypto.randomUUID()
-    const oneYear = 1000 * 60 * 60 * 24 * 365
-
-    res.cookie(
-      '1.0.0-cookie', 
-      token, 
-      { maxAge: oneYear, httpOnly: true, sameSite: 'none', secure: true },
-    )
-
+  if (!isValidUser) {
+    return res.status(404).send({ 
+      statusCode: 404, 
+      message: 'User not found'
+    })
   }
 
-  res.status(200).send({ statusCode: 200, message: 'User logged'} )
+  const token = crypto.randomUUID()
+
+  res.status(200).send({ statusCode: 200, message: 'User logged', token } )
 })
 
 app.get('/server-cookie', (req, res) => {
-  const cookie = req.cookies['1.0.0-cookie']
+  const token = req.headers?.authorization
 
-  if (cookie === undefined) {
+  if (token === undefined) {
     return res.status(401).send({ 
-      statusCode: 400, 
+      statusCode: 401, 
       message: 'User Unauthorized'
     })
   }
