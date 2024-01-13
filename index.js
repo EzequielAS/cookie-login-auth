@@ -8,8 +8,6 @@ const bd = {
   email: 'email@email.com',
   password: '123'
 }
-
-// { origin: 'https://clean-arch-next.vercel.app' }
 app.use(cors())
 app.use(express.json())
 
